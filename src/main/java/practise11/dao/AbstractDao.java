@@ -1,6 +1,6 @@
 package practise11.dao;
 
-import practise11.dao.pool.ConnectionPool;
+import practise11.dao.datasource.DataSource;
 import practise11.model.entity.Entity;
 
 import java.sql.*;
@@ -15,7 +15,7 @@ public abstract class AbstractDao <T extends Entity> {
     }
 
     protected List<T> findAll() {
-        try(Connection connection = ConnectionPool.getConnection()) {
+        try(Connection connection = DataSource.getConnection()) {
             List<T> out = new ArrayList<>();
             connection.setAutoCommit(false);
             Statement statement = connection.createStatement();
@@ -34,7 +34,7 @@ public abstract class AbstractDao <T extends Entity> {
 
 
     protected boolean add(T e) {
-        try(Connection connection = ConnectionPool.getConnection()) {
+        try(Connection connection = DataSource.getConnection()) {
             connection.setAutoCommit(false);
             StringBuilder sql = new StringBuilder("INSERT INTO " + tableName + " VALUES(null");
             for(int i = 0; i < fieldCount(); i++)
@@ -53,7 +53,7 @@ public abstract class AbstractDao <T extends Entity> {
     }
 
     protected boolean remove(int id) {
-        try(Connection connection = ConnectionPool.getConnection()) {
+        try(Connection connection = DataSource.getConnection()) {
             connection.setAutoCommit(false);
             String sql = "DELETE FROM " + tableName + " WHERE id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
